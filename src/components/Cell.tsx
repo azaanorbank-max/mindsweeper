@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import type { Cell as CellType } from '../types';
 import { getProbabilityColor } from '../engine/probability';
 
@@ -28,6 +28,47 @@ const CellComponent: React.FC<CellProps> = ({
   onReveal,
   onFlag,
 }) => {
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Tracks whether the 500ms threshold was reached so touchEnd knows not to reveal
+  const longPressFired = useRef(false);
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // Prevent browser from treating this as a scroll gesture on the cell itself.
+    // (The outer board container has touchAction:'none' for the same reason.)
+    e.preventDefault();
+    longPressFired.current = false;
+    longPressTimer.current = setTimeout(() => {
+      longPressFired.current = true;
+      longPressTimer.current = null;
+      onFlag(cell.x, cell.y);
+    }, 500);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    // Suppress the synthetic mouse click the browser fires after touchend —
+    // without this, onClick would fire too and reveal would be called twice.
+    e.preventDefault();
+    cancelLongPress();
+    if (!longPressFired.current) {
+      onReveal(cell.x, cell.y);
+    }
+    longPressFired.current = false;
+  };
+
+  const handleTouchMove = () => {
+    // Finger moved away (likely scrolling the board) — cancel the long press
+    // but do NOT reveal, since the touch didn't end on this cell.
+    cancelLongPress();
+  };
+
+  // Desktop mouse handlers
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     onReveal(cell.x, cell.y);
@@ -36,10 +77,6 @@ const CellComponent: React.FC<CellProps> = ({
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     onFlag(cell.x, cell.y);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    e.preventDefault();
   };
 
   if (cell.state === 'revealed') {
@@ -76,7 +113,9 @@ const CellComponent: React.FC<CellProps> = ({
           select-none cursor-pointer active:scale-95 transition-transform"
         onClick={handleClick}
         onContextMenu={handleContextMenu}
+        onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
         aria-label="Flagged cell"
       >
         🚩
@@ -98,7 +137,9 @@ const CellComponent: React.FC<CellProps> = ({
         ${showProbability && cell.probability >= 0 ? probColor : 'bg-gray-400 dark:bg-gray-500'}`}
       onClick={handleClick}
       onContextMenu={handleContextMenu}
+      onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
       aria-label={`Hidden cell at ${cell.x},${cell.y}`}
     >
       {showProbability && cell.probability >= 0 && (

@@ -91,17 +91,34 @@ export function updateProfileWithSession(session: GameSession): UserProfile {
   return profile;
 }
 
-export function saveDailyResult(dateId: string, won: boolean): void {
-  const key = `mindsweeper_daily_${dateId}`;
-  localStorage.setItem(key, JSON.stringify({ won, date: dateId }));
+export interface DailyStoredResult {
+  won: boolean;
+  date: string;
+  elapsedSeconds: number;
+  moves: Array<{ cellX: number; cellY: number; wasSafe: boolean }>;
 }
 
-export function getDailyResult(
-  dateId: string
-): { won: boolean; date: string } | null {
+export function saveDailyResult(
+  dateId: string,
+  won: boolean,
+  elapsedSeconds: number,
+  moves: Array<{ cellX: number; cellY: number; wasSafe: boolean }>,
+): void {
+  const key = `mindsweeper_daily_${dateId}`;
+  localStorage.setItem(key, JSON.stringify({ won, date: dateId, elapsedSeconds, moves }));
+}
+
+export function getDailyResult(dateId: string): DailyStoredResult | null {
   try {
     const raw = localStorage.getItem(`mindsweeper_daily_${dateId}`);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const p = JSON.parse(raw);
+    return {
+      won: !!p.won,
+      date: p.date ?? dateId,
+      elapsedSeconds: typeof p.elapsedSeconds === 'number' ? p.elapsedSeconds : 0,
+      moves: Array.isArray(p.moves) ? p.moves : [],
+    };
   } catch {
     return null;
   }

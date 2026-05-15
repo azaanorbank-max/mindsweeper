@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getDailyId, generateDailyBoard, buildShareEmoji } from '../engine/daily';
 import { getDailyResult, saveDailyResult } from '../store/gameState';
+import type { DailyStoredResult } from '../store/gameState';
 import type { Cell, GameSession } from '../types';
 
 interface DailyChallengeProps {
@@ -8,33 +9,63 @@ interface DailyChallengeProps {
   session: GameSession | null;
 }
 
+async function copyToClipboard(text: string): Promise<boolean> {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // fall through to legacy path
+    }
+  }
+  // Legacy execCommand fallback (HTTP, older iOS Safari)
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  const ok = document.execCommand('copy');
+  document.body.removeChild(ta);
+  return ok;
+}
+
 export const DailyChallenge: React.FC<DailyChallengeProps> = ({
   onStart,
   session,
 }) => {
   const dailyId = getDailyId();
-  const [result, setResult] = useState(() => getDailyResult(dailyId));
+  const [result, setResult] = useState<DailyStoredResult | null>(() => getDailyResult(dailyId));
   const [copied, setCopied] = useState(false);
 
+  // Persist result as soon as the daily game ends so Share works even after
+  // the coach panel is dismissed (session → null) or after a page reload.
   useEffect(() => {
-    if (session && (session.status === 'won' || session.status === 'lost') && session.isDaily) {
-      const won = session.status === 'won';
-      saveDailyResult(dailyId, won);
-      setResult({ won, date: dailyId });
-    }
-  }, [session, dailyId]);
+    if (!session || session.status === 'playing' || !session.isDaily) return;
+    const won = session.status === 'won';
+    const elapsedSeconds = session.endTime
+      ? Math.round((session.endTime - session.startTime) / 1000)
+      : 0;
+    const moves = session.moves.map(m => ({
+      cellX: m.cellX,
+      cellY: m.cellY,
+      wasSafe: m.wasSafe,
+    }));
+    saveDailyResult(dailyId, won, elapsedSeconds, moves);
+    setResult({ won, date: dailyId, elapsedSeconds, moves });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.id, session?.status, dailyId]);
 
-  const handleShare = () => {
-    if (!session) return;
-    const emoji = buildShareEmoji(
-      session.board.length ? session.board : generateDailyBoard(),
-      session.moves,
-      session.status === 'won'
-    );
-    navigator.clipboard.writeText(emoji).then(() => {
+  const handleShare = async () => {
+    if (!result) return;
+    // Board is deterministic from the date — no live session needed.
+    const board = generateDailyBoard(result.date);
+    const text = buildShareEmoji(board, result.moves, result.won, result.elapsedSeconds);
+    const ok = await copyToClipboard(text);
+    if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    });
+    }
   };
 
   const handleStart = () => {

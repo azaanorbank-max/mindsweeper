@@ -37,20 +37,21 @@ export function generateDailyBoard(dateStr?: string): Cell[][] {
 export function buildShareEmoji(
   board: Cell[][],
   moves: Array<{ cellX: number; cellY: number; wasSafe: boolean }>,
-  won: boolean
+  won: boolean,
+  elapsedSeconds: number,
 ): string {
   const rows = board.length;
   const cols = board[0].length;
 
-  // Build a mini 5×5 representation (sample every N cells)
-  const stepY = Math.floor(rows / 5);
-  const stepX = Math.floor(cols / 5);
+  // Sample the board into a 5×5 emoji grid
+  const stepY = Math.max(1, Math.floor(rows / 5));
+  const stepX = Math.max(1, Math.floor(cols / 5));
 
   const revealedSafe = new Set(
-    moves.filter(m => m.wasSafe).map(m => `${m.cellX},${m.cellY}`)
+    moves.filter(m => m.wasSafe).map(m => `${m.cellX},${m.cellY}`),
   );
   const revealedMine = new Set(
-    moves.filter(m => !m.wasSafe).map(m => `${m.cellX},${m.cellY}`)
+    moves.filter(m => !m.wasSafe).map(m => `${m.cellX},${m.cellY}`),
   );
 
   let grid = '';
@@ -68,6 +69,9 @@ export function buildShareEmoji(
   }
 
   const id = getDailyId();
-  const result = won ? '✅' : '❌';
-  return `MindSweeper Daily ${id} ${result}\n${grid}\nmindsweeper.app`;
+  const resultEmoji = won ? '🏆' : '💥';
+  const mm = String(Math.floor(elapsedSeconds / 60)).padStart(2, '0');
+  const ss = String(elapsedSeconds % 60).padStart(2, '0');
+
+  return `MindSweeper Daily ${id}\n${resultEmoji} Medium • ${mm}:${ss}\n${grid}mindsweeper-xi.vercel.app`;
 }
