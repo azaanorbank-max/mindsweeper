@@ -52,17 +52,12 @@ export const GamePage: React.FC<GamePageProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingDaily]);
 
-  // Persist completed sessions to profile
   useEffect(() => {
-    if (
-      session &&
-      (session.status === 'won' || session.status === 'lost') &&
-      !isAnalyzing
-    ) {
+    if (session && (session.status === 'won' || session.status === 'lost')) {
       updateProfileWithSession(session);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.id, session?.status, isAnalyzing]); // session?.id ensures once per game
+  }, [session?.id, session?.status]);
 
   const handleDifficultyChange = (d: Difficulty) => {
     setDifficulty(d);
@@ -73,10 +68,9 @@ export const GamePage: React.FC<GamePageProps> = ({
     resetGame();
   };
 
-  const showCoach =
-    session &&
-    (session.status === 'won' || session.status === 'lost') &&
-    (session.insights.length > 0 || isAnalyzing);
+  // Show coach panel immediately when game ends — the panel itself handles the
+  // loading/no-key/insights states, so no need to gate on isAnalyzing here.
+  const showCoach = !!session && (session.status === 'won' || session.status === 'lost');
 
   const statusEmoji =
     phase === 'won' ? '🏆' : phase === 'lost' ? '💥' : phase === 'playing' ? '😊' : '😴';
@@ -181,27 +175,6 @@ export const GamePage: React.FC<GamePageProps> = ({
             />
           )}
 
-          {/* Non-coach end state */}
-          {(phase === 'won' || phase === 'lost') && !showCoach && !isAnalyzing && (
-            <div className={`rounded-xl border p-4 text-center w-full max-w-sm
-              ${phase === 'won' ? 'border-emerald-700 bg-emerald-950/30' : 'border-red-700 bg-red-950/30'}`}>
-              <p className="text-lg font-bold text-white mb-1">
-                {phase === 'won' ? '🏆 You won!' : '💥 Game over'}
-              </p>
-              <p className="text-sm text-gray-400 mb-3">
-                {phase === 'won'
-                  ? `Cleared in ${elapsed}s`
-                  : 'Better luck next time'}
-              </p>
-              <button
-                onClick={handlePlayAgain}
-                className="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500
-                  text-white text-sm font-semibold transition-colors"
-              >
-                Play Again
-              </button>
-            </div>
-          )}
         </div>
       </div>
 

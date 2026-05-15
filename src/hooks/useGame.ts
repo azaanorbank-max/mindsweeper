@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Cell, GameSession, Move, Difficulty } from '../types';
 import {
   createEmptyBoard,
@@ -139,7 +139,6 @@ export function useGame(): UseGameReturn {
           };
           setPhase('lost');
           setSession(endSession);
-          runAnalysis(endSession);
           return final;
         }
 
@@ -163,7 +162,6 @@ export function useGame(): UseGameReturn {
           };
           setPhase('won');
           setSession(endSession);
-          runAnalysis(endSession);
         } else {
           setSession(prev2 =>
             prev2 ? { ...prev2, moves: movesRef.current } : prev2
@@ -207,7 +205,8 @@ export function useGame(): UseGameReturn {
     [phase, difficulty]
   );
 
-  async function runAnalysis(s: GameSession) {
+  // Stable callback — setIsAnalyzing/setSession/analyzeGame never change
+  const runAnalysis = useCallback(async (s: GameSession) => {
     if (!import.meta.env.VITE_ANTHROPIC_API_KEY) return;
     setIsAnalyzing(true);
     try {
@@ -218,7 +217,15 @@ export function useGame(): UseGameReturn {
     } finally {
       setIsAnalyzing(false);
     }
-  }
+  }, []);
+
+  // Trigger analysis once per completed game, outside any setState updater
+  // (avoids React StrictMode double-invoking the updater → double API call)
+  useEffect(() => {
+    if (!session || (session.status !== 'won' && session.status !== 'lost')) return;
+    if (session.insights.length > 0) return;
+    void runAnalysis(session);
+  }, [session?.id, session?.status, runAnalysis]);
 
   const toggleProbabilities = useCallback(() => {
     setShowProbabilities(p => !p);
