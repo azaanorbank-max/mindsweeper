@@ -75,22 +75,22 @@ export const DailyChallenge: React.FC<DailyChallengeProps> = ({
 
   if (result) {
     return (
-      <div className="rounded-xl border border-gray-700 p-4 bg-gray-800/50">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800/50">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-lg">{result.won ? '🏆' : '💥'}</span>
           <div>
-            <p className="text-sm font-semibold text-white">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">
               Daily {dailyId}
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               {result.won ? 'Completed!' : 'Better luck tomorrow'}
             </p>
           </div>
         </div>
         <button
           onClick={handleShare}
-          className="w-full py-2 rounded-lg bg-gray-700 hover:bg-gray-600
-            text-sm text-gray-200 font-medium border border-gray-600 transition-colors"
+          className="w-full py-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600
+            text-sm text-gray-700 dark:text-gray-200 font-medium border border-gray-200 dark:border-gray-600 transition-colors"
         >
           {copied ? '✅ Copied!' : '📋 Share Result'}
         </button>
@@ -99,12 +99,12 @@ export const DailyChallenge: React.FC<DailyChallengeProps> = ({
   }
 
   return (
-    <div className="rounded-xl border border-violet-700/50 p-4 bg-violet-950/20">
+    <div className="rounded-xl border border-violet-300 dark:border-violet-700/50 p-4 bg-violet-50 dark:bg-violet-950/20">
       <div className="flex items-center gap-2 mb-3">
         <span className="text-lg">📅</span>
         <div>
-          <p className="text-sm font-semibold text-white">Daily Challenge</p>
-          <p className="text-xs text-gray-400">{dailyId} · Medium difficulty</p>
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">Daily Challenge</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{dailyId} · Medium difficulty</p>
         </div>
       </div>
       <button

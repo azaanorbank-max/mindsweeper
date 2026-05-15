@@ -26,11 +26,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
-      <header className="flex items-center justify-between px-4 py-3 border-b border-gray-800 flex-shrink-0">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col">
+      <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
         <button
           onClick={onNavigateGame}
-          className="flex items-center gap-1.5 text-sm text-gray-300 hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
           ← Game
         </button>

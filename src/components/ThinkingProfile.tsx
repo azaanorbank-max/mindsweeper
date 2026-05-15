@@ -8,9 +8,9 @@ interface ThinkingProfileProps {
 }
 
 const STYLE_CONFIG = {
-  impulsive:  { label: 'Impulsive',   emoji: '⚡', color: 'text-red-400',    bg: 'bg-red-950/40 border-red-700' },
-  balanced:   { label: 'Balanced',    emoji: '⚖️', color: 'text-yellow-400', bg: 'bg-yellow-950/40 border-yellow-700' },
-  calculated: { label: 'Calculated',  emoji: '🧠', color: 'text-violet-400', bg: 'bg-violet-950/40 border-violet-700' },
+  impulsive:  { label: 'Impulsive',   emoji: '⚡', color: 'text-red-600 dark:text-red-400',       bg: 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-700' },
+  balanced:   { label: 'Balanced',    emoji: '⚖️', color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-950/40 border-yellow-200 dark:border-yellow-700' },
+  calculated: { label: 'Calculated',  emoji: '🧠', color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-50 dark:bg-violet-950/40 border-violet-200 dark:border-violet-700' },
 };
 
 function formatTime(seconds: number): string {
@@ -91,14 +91,14 @@ export const ThinkingProfile: React.FC<ThinkingProfileProps> = ({
     <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
       {/* Thinking style badge */}
       <div className={`rounded-2xl border p-5 ${style.bg}`}>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
           Your thinking style
         </p>
         <div className="flex items-center gap-3">
           <span className="text-4xl">{style.emoji}</span>
           <div>
             <h2 className={`text-2xl font-bold ${style.color}`}>{style.label}</h2>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
               {profile.thinkingStyle === 'impulsive' &&
                 'You often open cells with >50% mine probability. Trust the numbers!'}
               {profile.thinkingStyle === 'balanced' &&
@@ -119,23 +119,23 @@ export const ThinkingProfile: React.FC<ThinkingProfileProps> = ({
         ].map(s => (
           <div
             key={s.label}
-            className="rounded-xl border border-gray-700 bg-gray-800/50 p-3 text-center"
+            className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-3 text-center"
           >
-            <div className="text-2xl font-bold text-white">{s.value}</div>
-            <div className="text-xs text-gray-400 mt-0.5">{s.label}</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{s.value}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Ratio bars */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-4 space-y-3">
-        <h3 className="text-sm font-semibold text-gray-300">Decision Profile</h3>
+      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-4 space-y-3">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Decision Profile</h3>
         <div>
-          <div className="flex justify-between text-xs text-gray-400 mb-1">
+          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
             <span>⚡ Impulsive moves (&gt;50% risk)</span>
             <span className="font-mono">{profile.impulsiveRatio}%</span>
           </div>
-          <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div
               className="h-full bg-red-500 rounded-full transition-all"
               style={{ width: `${profile.impulsiveRatio}%` }}
@@ -143,11 +143,11 @@ export const ThinkingProfile: React.FC<ThinkingProfileProps> = ({
           </div>
         </div>
         <div>
-          <div className="flex justify-between text-xs text-gray-400 mb-1">
+          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
             <span>🧠 Accurate moves (≤25% risk)</span>
             <span className="font-mono">{profile.accurateRatio}%</span>
           </div>
-          <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div
               className="h-full bg-violet-500 rounded-full transition-all"
               style={{ width: `${profile.accurateRatio}%` }}
@@ -157,12 +157,12 @@ export const ThinkingProfile: React.FC<ThinkingProfileProps> = ({
       </div>
 
       {/* Best times */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-4">
-        <h3 className="text-sm font-semibold text-gray-300 mb-3">Best Times</h3>
+      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-4">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Best Times</h3>
         <div className="space-y-2">
           {(['easy', 'medium', 'expert'] as const).map(d => (
             <div key={d} className="flex justify-between text-sm">
-              <span className="text-gray-400 capitalize">{d}</span>
+              <span className="text-gray-500 dark:text-gray-400 capitalize">{d}</span>
               <span className="font-mono text-violet-400">
                 {profile.bestTimes[d] != null ? formatTime(profile.bestTimes[d]) : '—'}
               </span>
@@ -172,10 +172,10 @@ export const ThinkingProfile: React.FC<ThinkingProfileProps> = ({
       </div>
 
       {/* Recent games chart */}
-      <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-4">
-        <h3 className="text-sm font-semibold text-gray-300 mb-2">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-4">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
           Recent Games
-          <span className="text-xs font-normal text-gray-500 ml-2">
+          <span className="text-xs font-normal text-gray-500 dark:text-gray-500 ml-2">
             🟢 win · 🔴 loss · height = time
           </span>
         </h3>
@@ -193,8 +193,8 @@ export const ThinkingProfile: React.FC<ThinkingProfileProps> = ({
         </button>
         <button
           onClick={onReset}
-          className="px-4 py-2.5 rounded-xl bg-gray-700 hover:bg-gray-600
-            text-gray-300 text-sm border border-gray-600 transition-colors"
+          className="px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600
+            text-gray-700 dark:text-gray-300 text-sm border border-gray-200 dark:border-gray-600 transition-colors"
           title="Reset all stats"
         >
           Reset

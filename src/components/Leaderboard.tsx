@@ -22,18 +22,18 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ profile }) => {
   const hasBestTimes = difficulties.some(d => profile.bestTimes[d] != null);
 
   return (
-    <div className="rounded-xl border border-gray-700 dark:border-gray-600 overflow-hidden">
-      <div className="px-4 py-2 bg-gray-800 dark:bg-gray-700 border-b border-gray-700">
-        <h3 className="text-sm font-semibold text-gray-300">Best Times</h3>
+    <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Best Times</h3>
       </div>
-      <div className="divide-y divide-gray-700">
+      <div className="divide-y divide-gray-100 dark:divide-gray-700">
         {difficulties.map(d => (
           <div
             key={d}
-            className="flex items-center justify-between px-4 py-2.5 text-sm"
+            className="flex items-center justify-between px-4 py-2.5 text-sm bg-white dark:bg-transparent"
           >
-            <span className="text-gray-400">{DIFFICULTY_LABELS[d]}</span>
-            <span className="font-mono font-bold text-violet-400">
+            <span className="text-gray-500 dark:text-gray-400">{DIFFICULTY_LABELS[d]}</span>
+            <span className="font-mono font-bold text-violet-600 dark:text-violet-400">
               {profile.bestTimes[d] != null
                 ? formatTime(profile.bestTimes[d])
                 : '—'}

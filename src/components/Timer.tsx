@@ -10,7 +10,7 @@ export const Timer: React.FC<TimerProps> = ({ elapsed }) => {
   const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
   return (
-    <div className="font-mono text-lg font-bold text-gray-200 tabular-nums tracking-wider">
+    <div className="font-mono text-lg font-bold text-gray-700 dark:text-gray-200 tabular-nums tracking-wider">
       {display}
     </div>
   );

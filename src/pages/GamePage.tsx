@@ -76,17 +76,17 @@ export const GamePage: React.FC<GamePageProps> = ({
     phase === 'won' ? '🏆' : phase === 'lost' ? '💥' : phase === 'playing' ? '😊' : '😴';
 
   return (
-    <div className="min-h-screen bg-gray-950 dark:bg-gray-950 text-white flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 border-b border-gray-800 flex-shrink-0">
+      <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-violet-400 tracking-tight">MindSweeper</span>
+          <span className="text-lg font-bold text-violet-600 dark:text-violet-400 tracking-tight">MindSweeper</span>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={onNavigateProfile}
-            className="px-3 py-1.5 rounded-lg text-sm text-gray-300
-              bg-gray-800 border border-gray-700 hover:border-violet-500 transition-colors"
+            className="px-3 py-1.5 rounded-lg text-sm text-gray-600 dark:text-gray-300
+              bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-violet-500 transition-colors"
           >
             Profile
           </button>
@@ -107,17 +107,17 @@ export const GamePage: React.FC<GamePageProps> = ({
             onStart={preBuiltBoard => startGame('medium', preBuiltBoard)}
             session={session}
           />
-          <div className="rounded-xl border border-gray-700 bg-gray-800/50 p-3 space-y-2">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-3 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Mines left</span>
-              <span className="font-mono font-bold text-red-400">💣 {minesLeft}</span>
+              <span className="text-gray-500 dark:text-gray-400">Mines left</span>
+              <span className="font-mono font-bold text-red-500 dark:text-red-400">💣 {minesLeft}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Time</span>
+              <span className="text-gray-500 dark:text-gray-400">Time</span>
               <Timer elapsed={elapsed} />
             </div>
           </div>
-          <div className="hidden lg:block text-xs text-gray-600 space-y-1">
+          <div className="hidden lg:block text-xs text-gray-400 dark:text-gray-600 space-y-1">
             <p>Left click: reveal</p>
             <p>Right click: flag</p>
             <p>Mobile: hold to flag</p>
@@ -141,7 +141,7 @@ export const GamePage: React.FC<GamePageProps> = ({
                 }
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium
-                bg-gray-700 border border-gray-600 hover:border-violet-500 text-gray-300 transition-colors"
+                bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:border-violet-500 text-gray-600 dark:text-gray-300 transition-colors"
             >
               <span className="text-base">{statusEmoji}</span>
               <span className="hidden sm:inline">
@@ -154,8 +154,8 @@ export const GamePage: React.FC<GamePageProps> = ({
           {phase === 'idle' ? (
             <div className="flex flex-col items-center gap-4 py-12 text-center">
               <div className="text-6xl">💣</div>
-              <h1 className="text-2xl font-bold text-white">MindSweeper</h1>
-              <p className="text-gray-400 max-w-xs text-sm">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MindSweeper</h1>
+              <p className="text-gray-500 dark:text-gray-400 max-w-xs text-sm">
                 Train your probabilistic thinking with AI-powered coaching.
               </p>
               <button

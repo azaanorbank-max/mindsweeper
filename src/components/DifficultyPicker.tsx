@@ -33,7 +33,7 @@ export const DifficultyPicker: React.FC<DifficultyPickerProps> = ({
               ${
                 current === d
                   ? 'bg-violet-600 text-white border border-violet-500'
-                  : 'bg-gray-700 dark:bg-gray-800 text-gray-300 border border-gray-600 hover:border-violet-500'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:border-violet-500'
               }
               ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           >
